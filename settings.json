@@ -1,0 +1,6 @@
+{
+    "window.zoomLevel": 0,
+    "java.errors.incompleteClasspath.severity": "ignore",
+    "terminal.integrated.shell.windows": "C:\\Windows\\Sysnative\\bash.exe",
+    "workbench.iconTheme": "vscode-icons"
+}
