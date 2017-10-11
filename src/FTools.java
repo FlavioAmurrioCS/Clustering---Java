@@ -161,10 +161,26 @@ public class FTools {
 
     // }
 
-    // @SuppressWarnings("unchecked")
-    // public static ArrayList<Object> fileToList(String filename, Class cls)
+    @SuppressWarnings("unchecked")
+    public static ArrayList<Object> fileToList(String filename, Class cls)
+    {
+        ArrayList retList = new ArrayList<>();
+        Constructor constructor = null;
+        Scanner sc = FTools.fileOpener(filename);
+        try {
+            constructor = cls.getConstructor(String.class);
+            while (sc.hasNext()) {
+                retList.add(constructor.newInstance(sc.nextLine()));
+            }
+        } catch (Exception e) {
+            //TODO: handle exception
+        }
+        sc.close();
+        return retList;
+    }
+
+    // public static void fileToList(String filename, Class cls, ArrayList<?> retList)
     // {
-    //     ArrayList<cls.> retList = new ArrayList<>();
     //     Constructor constructor = null;
     //     Scanner sc = FTools.fileOpener(filename);
     //     try {
@@ -176,7 +192,6 @@ public class FTools {
     //         //TODO: handle exception
     //     }
     //     sc.close();
-    //     return retList;
     // }
 
 }

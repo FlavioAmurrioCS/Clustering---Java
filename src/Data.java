@@ -30,6 +30,7 @@ public abstract class  Data {
         dSet.addAll(this.dList);
     }
 
+
     public Data(String str) {
         this(new Scanner(str));
     }
