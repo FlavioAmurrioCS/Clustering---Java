@@ -47,27 +47,20 @@ public class Clusters {
         }
     }
 
-    public void classify()
-    {
-        for(LineData ld : this.lineList)
-        {
+    public void classify() {
+        for (LineData ld : this.lineList) {
             double dist = 999999999;
-            for(int i = 0; i < this.centroids.size(); i++)
-            {
+            for (int i = 0; i < this.centroids.size(); i++) {
                 double tempDist = ld.euDistance(this.centroids.get(i));
                 ld.label = tempDist < dist ? i : ld.label;
+                dist = tempDist < dist ? tempDist : dist;
             }
         }
     }
 
-    public void toFile(String filename)
-    {
-        StringBuilder sb = new StringBuilder();
-        for(LineData ld : this.lineList)
-        {
-            sb.append(ld.label + "\n");
-        }
-        FTools.appendFile(filename, sb.toString());
+    public void toFile(String filename) {
+        FTools.tittleMaker("writing file");
+        FTools.listToFile(this.lineList, filename);
     }
 
 }

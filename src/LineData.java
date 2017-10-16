@@ -105,16 +105,22 @@ public class LineData {
         return lineData;
     }
 
-    public static ArrayList<LineData> fileToList(String filename)
-    {
+    public static ArrayList<LineData> fileToList(String filename) {
         Scanner sc = FTools.fileOpener(filename);
         ArrayList<LineData> retList = new ArrayList<>();
-        while(sc.hasNext())
-        {
+        while (sc.hasNext()) {
             retList.add(new LineData(sc.nextLine()));
         }
         sc.close();
         return retList;
+    }
+
+    public void print() {
+        System.out.println(this.lineMap);
+    }
+
+    public String toString() {
+        return "" + this.label;
     }
 
 }

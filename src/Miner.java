@@ -11,18 +11,27 @@ public class Miner {
     public static final String OUTPUT_FILE = "./res/gen/output.txt";
 
     public static void main(String[] args) {
-        ArrayList<LineData> lineList = LineData.fileToList(INPUT_FILE);
-        Clusters cls = new Clusters(7, lineList);
-        cls.kMean();
-        ProgressBar pb = new ProgressBar(10, 1);
-        for(int i = 0; i < 10; i++)
-        {
-            cls.classify();
-            cls.reCenter();
-            pb.update(i);
-        }
-        cls.classify();
-        cls.toFile(OUTPUT_FILE);
+
+        System.out.println(TfIdf.getTfIdf(INPUT_FILE, OUTPUT_FILE));
+
+
+
+        // ArrayList<LineData> lineList = LineData.fileToList(INPUT_FILE);
+        // Clusters cls = new Clusters(7, lineList);
+        // cls.kMean();
+        // ProgressBar pb = new ProgressBar(10, 1);
+        // FTools.tittleMaker("INIT");
+        // for(int i = 0; i < 5; i++)
+        // {
+        //     FTools.tittleMaker("Inside the loop");
+        //     cls.classify();
+        //     cls.reCenter();
+        //     // pb.update(i);
+        //     System.out.println("Number: " + i);
+        // }
+        // FTools.tittleMaker("Done");
+        // cls.classify();
+        // cls.toFile(OUTPUT_FILE);
     }
 
     public static ArrayList<WordCount> FileToStringList(String filename) {
