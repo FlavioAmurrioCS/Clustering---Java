@@ -26,7 +26,7 @@ public class Miner {
         // ProgressBar pb = new ProgressBar(10, 1);
         // FTools.tittleMaker("INIT");
         // FTools.appendFile(DISTCHANGE_FILE, cls.centroids.toString());
-        for(int i = 0; i < 10; i)
+        for(int i = 0; i < 100; i++)
         {
             // FTools.tittleMaker("Inside the loop");
             cls.classify();
