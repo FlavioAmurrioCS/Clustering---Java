@@ -9,29 +9,48 @@ public class Miner {
     public static final String INPUT_FILE = "./res/original/1507224963_4758732_input.dat";
     public static final String SCRATCH_FILE = "./res/gen/scratch.txt";
     public static final String OUTPUT_FILE = "./res/gen/output.txt";
+    public static final String DISTCHANGE_FILE = "./res/gen/DisChange.txt";
 
     public static void main(String[] args) {
 
-        System.out.println(TfIdf.getTfIdf(INPUT_FILE, OUTPUT_FILE));
+        // System.out.println(TfIdf.getTfIdf(INPUT_FILE, OUTPUT_FILE));
+        FTimer ft = new FTimer();
 
 
 
-        // ArrayList<LineData> lineList = LineData.fileToList(INPUT_FILE);
-        // Clusters cls = new Clusters(7, lineList);
-        // cls.kMean();
+        FTools.appendFile(DISTCHANGE_FILE, (new Date()).toString());
+        ArrayList<LineData> lineList = LineData.fileToList(INPUT_FILE);
+        Clusters cls = new Clusters(7, lineList);
+        cls.kMean();
+        // cls.kMeanPlusPlus();
         // ProgressBar pb = new ProgressBar(10, 1);
         // FTools.tittleMaker("INIT");
-        // for(int i = 0; i < 5; i++)
-        // {
-        //     FTools.tittleMaker("Inside the loop");
-        //     cls.classify();
-        //     cls.reCenter();
-        //     // pb.update(i);
-        //     System.out.println("Number: " + i);
-        // }
-        // FTools.tittleMaker("Done");
-        // cls.classify();
-        // cls.toFile(OUTPUT_FILE);
+        // FTools.appendFile(DISTCHANGE_FILE, cls.centroids.toString());
+        for(int i = 0; i < 30; i++)
+        {
+            // FTools.tittleMaker("Inside the loop");
+            cls.classify();
+            ArrayList<LineData> ori = new ArrayList<>(cls.centroids);
+            cls.reCenter();
+            FTools.appendFile(DISTCHANGE_FILE, getDistChange(ori, cls.centroids));
+            // pb.update(i);
+            System.out.println("Number: " + i);
+        }
+        FTools.tittleMaker("Done");
+        cls.classify();
+        cls.toFile(OUTPUT_FILE);
+        ft.print();
+    }
+
+    public static String getDistChange(ArrayList<LineData> original, ArrayList<LineData> change)
+    {
+        double sum = 0;
+        for(int i = 0; i< original.size(); i++)
+        {
+            sum += original.get(i).euDistance(change.get(i));
+        }
+        System.out.println("Sum Distance Change: " + sum);
+        return "Sum Distance Chnage: " + sum;
     }
 
     public static ArrayList<WordCount> FileToStringList(String filename) {

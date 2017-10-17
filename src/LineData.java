@@ -5,11 +5,15 @@ import java.util.*;
  */
 public class LineData {
 
-    HashMap<Integer, Double> lineMap;
-    int label = -1;
-    double distance;
-    String lineStr;
-    double sumSquare = 0;
+    public static final String EUCLEADIAN = "eu";
+    public static final String COSINESIM = "cos";
+
+    private HashMap<Integer, Double> lineMap;
+    private int label = -1;
+    private double distance;
+    private String lineStr;
+    private double sumSquare = 0;
+    private int wordCount = 0;
 
     // If normalizing, consider using BigDecimal for the count
     public LineData(String str) {
@@ -18,20 +22,42 @@ public class LineData {
         lineMap = new HashMap<>();
         while (sc.hasNext()) {
             Integer id = sc.nextInt();
-            Double count = (double) sc.nextInt();
+            int value = sc.nextInt();
+            this.wordCount += value;
+            Double count = (double) value;
             lineMap.put(id, count);
-            this.sumSquare += count * count;
+            this.sumSquare += count * count; //Not need unless implementing cosine similarity()
         }
         this.sumSquare = Math.sqrt(this.sumSquare);
         sc.close();
     }
 
+    public Entry.Map<Integer, Double> entrySet() {
+        return this.lineMap.entrySet();
+    }
+
+    public Set<Integer> keySet() {
+        return this.lineMap.keySet();
+    }
+
+    public Set<Double> valueSet() {
+        return this.lineMap.values();
+    }
+
+    public HashMap<Integer, Double> getHashMap() {
+        return this.lineMap;
+    }
+
     public LineData() {
-        lineMap = new HashMap<>();
+        this.lineMap = new HashMap<>();
     }
 
     public void setLabel(int k) {
         this.label = k;
+    }
+
+    public int getLabel() {
+        return this.label;
     }
 
     public void clearLabel() {
@@ -46,19 +72,23 @@ public class LineData {
         return this.containsKey(key) ? this.lineMap.get(key) : 0.0;
     }
 
-    public double cosDistance(LineData ld) {
+    public double getSumSquare() {
+        return this.sumSquare;
+    }
+
+    private double cosDistance(LineData ld) {
         double sum = 0;
         for (Map.Entry<Integer, Double> entry : this.lineMap.entrySet()) {
             Integer key = entry.getKey();
             Double value = entry.getValue();
-            if (ld.containsKey(key)) {
-                sum += value * ld.get(key);
-            }
+            //if (ld.containsKey(key)) {
+            sum += value * ld.get(key);
+            //} //Dont need the if since the get returns zero if key is not included;
         }
-        return (sum / (this.sumSquare * ld.sumSquare));
+        return (sum / (this.getSumSquare() * ld.getSumSquare()));
     }
 
-    public double euDistance(LineData ld) {
+    private double euDistance(LineData ld) {
         HashMap<Integer, Double> tempMap = new HashMap<>(ld.lineMap);
         tempMap.keySet().removeAll(this.lineMap.keySet());
         double sum = 0;
@@ -68,14 +98,25 @@ public class LineData {
         for (Map.Entry<Integer, Double> entry : this.lineMap.entrySet()) {
             Integer key = entry.getKey();
             Double value = entry.getValue();
-            if (ld.containsKey(key)) {
-                double temp = value - ld.get(key);
-                sum += temp * temp;
-            } else {
-                sum += value * value;
-            }
+            // if (ld.containsKey(key)) {
+            double temp = value - ld.get(key);
+            sum += temp * temp;
+            // } else {
+            //     sum += value * value;
+            // }
         }
         return Math.sqrt(sum);
+    }
+
+    public double distance(LineData ld, String method) {
+        switch (method) {
+        case EUCLEADIAN:
+            return this.euDistance(ld);
+        case COSINESIM:
+            return this.cosDistance(ld);
+        default:
+            return this.euDistance(ld);
+        }
     }
 
     public void addFeature(Integer key, Double value) {
@@ -121,6 +162,46 @@ public class LineData {
 
     public String toString() {
         return "" + this.label;
+    }
+
+    public void normalize(HashMap<Integer, Double> iMap) {
+        for (Map.Entry<Integer, Double> entry : this.lineMap.entrySet()) {
+            Integer key = entry.getKey();
+            Double value = entry.getValue();
+            Double idf = iMap.get(key);
+            Double tf = value / (double) this.wordCount;
+            entry.setValue(tf * idf);
+        }
+    }
+
+    public static HashMap<Integer, Double> idfMap(ArrayList<LineData> lineList) {
+        Double size = (double) lineList.size();
+        HashSet<Integer> keySet = new HashSet<>();
+        for (LineData ld : lineList) {
+            keySet.addAll(ld.lineMap.keySet());
+        }
+        HashMap<Integer, Double> iMap = new HashMap<>();
+        for (Integer it : keySet) {
+            int count = 0;
+            for (LineData ld : lineList) {
+                if (ld.containsKey(it)) {
+                    count++;
+                }
+            }
+            double idf = size / (double) count;
+            idf = Math.log(idf);
+            iMap.put(it, idf);
+        }
+        return iMap;
+    }
+
+    public static void tfIdf(ArrayList<LineData> lineList) {
+        FTimer ft = new FTimer("Tf-Idf");
+        HashMap<Integer, Double> iMap = idfMap(lineList);
+        for (LineData ld : lineList) {
+            ld.normalize(iMap);
+        }
+        ft.print();
     }
 
 }
