@@ -3,9 +3,16 @@
  */
 public class FTimer {
     long cTime;
+    String method;
 
     public FTimer() {
         this.cTime = System.currentTimeMillis();
+        this.method = "";
+    }
+
+    public FTimer(String method) {
+        this.cTime = System.currentTimeMillis();
+        this.method = method;
     }
 
     public String toString() {
@@ -14,7 +21,7 @@ public class FTimer {
     }
 
     public void print() {
-        System.out.println(this.toString());
+        System.out.println(this.method + " took: " + this.toString());
     }
 
     public static String timeToString(long time) {
@@ -24,6 +31,17 @@ public class FTimer {
         } else {
             return "Time: " + time + "s                      ";
         }
+    }
 
+    public void time() {
+        long markTime = System.currentTimeMillis();
+        long ellapseTime = markTime - this.cTime;
+        ellapseTime /= 1000;
+        String timeStr = (ellapseTime < 60) ? ellapseTime + "s" : (ellapseTime / 60) + "m " + ellapseTime % 60 + "s";
+        if (this.method.equals("")) {
+            System.out.println("Time: " + timeStr);
+        } else {
+            System.out.println(this.method + " took: " + timeStr);
+        }
     }
 }
