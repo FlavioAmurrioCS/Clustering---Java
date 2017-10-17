@@ -7,6 +7,8 @@ public class LineData {
 
     public static final String EUCLEADIAN = "eu";
     public static final String COSINESIM = "cos";
+    public static String DIST_METHOD = "eu";
+    public static boolean TF_IDF = true;
 
     private HashMap<Integer, Double> lineMap;
     private int label = -1;
@@ -32,7 +34,7 @@ public class LineData {
         sc.close();
     }
 
-    public Entry.Map<Integer, Double> entrySet() {
+    public Set<Map.Entry<Integer,Double>> entrySet() {
         return this.lineMap.entrySet();
     }
 
@@ -40,7 +42,7 @@ public class LineData {
         return this.lineMap.keySet();
     }
 
-    public Set<Double> valueSet() {
+    public Collection<Double> valueSet() {
         return this.lineMap.values();
     }
 
@@ -78,38 +80,32 @@ public class LineData {
 
     private double cosDistance(LineData ld) {
         double sum = 0;
-        for (Map.Entry<Integer, Double> entry : this.lineMap.entrySet()) {
+        for (Map.Entry<Integer, Double> entry : this.entrySet()) {
             Integer key = entry.getKey();
             Double value = entry.getValue();
-            //if (ld.containsKey(key)) {
             sum += value * ld.get(key);
-            //} //Dont need the if since the get returns zero if key is not included;
         }
         return (sum / (this.getSumSquare() * ld.getSumSquare()));
     }
 
     private double euDistance(LineData ld) {
-        HashMap<Integer, Double> tempMap = new HashMap<>(ld.lineMap);
-        tempMap.keySet().removeAll(this.lineMap.keySet());
+        HashMap<Integer, Double> tempMap = new HashMap<>(ld.getHashMap());
+        tempMap.keySet().removeAll(this.keySet());
         double sum = 0;
         for (Double it : tempMap.values()) {
             sum += it * it;
         } // This takes care of the values in ld that are not in this
-        for (Map.Entry<Integer, Double> entry : this.lineMap.entrySet()) {
+        for (Map.Entry<Integer, Double> entry : this.entrySet()) {
             Integer key = entry.getKey();
             Double value = entry.getValue();
-            // if (ld.containsKey(key)) {
             double temp = value - ld.get(key);
             sum += temp * temp;
-            // } else {
-            //     sum += value * value;
-            // }
         }
-        return Math.sqrt(sum);
+        return sum;
     }
 
-    public double distance(LineData ld, String method) {
-        switch (method) {
+    public double distance(LineData ld) {
+        switch (LineData.DIST_METHOD) {
         case EUCLEADIAN:
             return this.euDistance(ld);
         case COSINESIM:
@@ -119,7 +115,7 @@ public class LineData {
         }
     }
 
-    public void addFeature(Integer key, Double value) {
+    private void addFeature(Integer key, Double value) {
         if (!this.containsKey(key)) {
             this.lineMap.put(key, value);
         } else {
@@ -133,39 +129,39 @@ public class LineData {
         LineData lineData = new LineData();
 
         for (LineData ld : lineList) {
-            for (Map.Entry<Integer, Double> entry : ld.lineMap.entrySet()) {
+            for (Map.Entry<Integer, Double> entry : ld.entrySet()) {
                 Integer key = entry.getKey();
                 Double value = entry.getValue();
                 lineData.addFeature(key, value);
             }
             ld.clearLabel();
         }
-        for (Map.Entry<Integer, Double> entry : lineData.lineMap.entrySet()) {
+        for (Map.Entry<Integer, Double> entry : lineData.entrySet()) {
             entry.setValue(entry.getValue() / size);
         }
         return lineData;
     }
 
     public static ArrayList<LineData> fileToList(String filename) {
+        FTimer ft = new FTimer("Reading Input File");
         Scanner sc = FTools.fileOpener(filename);
         ArrayList<LineData> retList = new ArrayList<>();
         while (sc.hasNext()) {
             retList.add(new LineData(sc.nextLine()));
         }
         sc.close();
+        ft.time();
+        if (TF_IDF)
+            performTfIdf(retList);
         return retList;
-    }
-
-    public void print() {
-        System.out.println(this.lineMap);
     }
 
     public String toString() {
         return "" + this.label;
     }
 
-    public void normalize(HashMap<Integer, Double> iMap) {
-        for (Map.Entry<Integer, Double> entry : this.lineMap.entrySet()) {
+    private void normalize(HashMap<Integer, Double> iMap) {
+        for (Map.Entry<Integer, Double> entry : this.entrySet()) {
             Integer key = entry.getKey();
             Double value = entry.getValue();
             Double idf = iMap.get(key);
@@ -174,11 +170,11 @@ public class LineData {
         }
     }
 
-    public static HashMap<Integer, Double> idfMap(ArrayList<LineData> lineList) {
+    private static HashMap<Integer, Double> getIdfMap(ArrayList<LineData> lineList) {
         Double size = (double) lineList.size();
         HashSet<Integer> keySet = new HashSet<>();
         for (LineData ld : lineList) {
-            keySet.addAll(ld.lineMap.keySet());
+            keySet.addAll(ld.keySet());
         }
         HashMap<Integer, Double> iMap = new HashMap<>();
         for (Integer it : keySet) {
@@ -188,20 +184,20 @@ public class LineData {
                     count++;
                 }
             }
-            double idf = size / (double) count;
-            idf = Math.log(idf);
+            double idf = size / ((double) count + 1);
+            idf = Math.log(idf) + 1;
             iMap.put(it, idf);
         }
         return iMap;
     }
 
-    public static void tfIdf(ArrayList<LineData> lineList) {
-        FTimer ft = new FTimer("Tf-Idf");
-        HashMap<Integer, Double> iMap = idfMap(lineList);
+    private static void performTfIdf(ArrayList<LineData> lineList) {
+        FTimer ft = new FTimer("Normalizing Data");
+        HashMap<Integer, Double> iMap = getIdfMap(lineList);
         for (LineData ld : lineList) {
             ld.normalize(iMap);
         }
-        ft.print();
+        ft.time();
     }
 
 }
