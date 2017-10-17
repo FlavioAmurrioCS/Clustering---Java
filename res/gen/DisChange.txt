@@ -1,0 +1,7 @@
+
+Tue Oct 17 18:02:58 GMT 2017
+Sum Distance Chnage: 4.906224980212034
+Sum Distance Chnage: 0.17482295156729838
+Sum Distance Chnage: 0.10821523163420542
+Sum Distance Chnage: 0.08868378889306579
+Sum Distance Chnage: 0.05765619857951356

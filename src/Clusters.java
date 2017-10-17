@@ -11,6 +11,7 @@ public class Clusters {
 
     public Clusters(int k, ArrayList<LineData> lineList) {
         this.kCount = k;
+        LineData.tfIdf(lineList);
         this.lineList = lineList;
         this.centroids = new ArrayList<>();
     }
@@ -24,6 +25,41 @@ public class Clusters {
     }
 
     public void kMeanPlusPlus() {
+        this.centroids.add(getNearOrigin(this.lineList));
+        while (this.centroids.size() != kCount) {
+            getFarPoint(this.centroids, this.lineList);
+        }
+
+    }
+
+    public static void getFarPoint(ArrayList<LineData> kList, ArrayList<LineData> lineList) {
+        LineData ret = null;
+        double dist = 0;
+        for (LineData ld : lineList) {
+            double sumDist = 0;
+            for (LineData cent : kList) {
+                sumDist += cent.euDistance(ld);
+            }
+            if (sumDist > dist) {
+                ret = ld;
+                dist = sumDist;
+            }
+        }
+        kList.add(ret);
+    }
+
+    public static LineData getNearOrigin(ArrayList<LineData> lineList) {
+        // LineData ori = new LineData();
+        // double dist = Double.MAX_VALUE;
+        // LineData ret = null;
+        // for (LineData ld : lineList) {
+        //     double nDist = ori.euDistance(ld);
+        //     if (nDist < dist) {
+        //         ret = ld;
+        //         dist = nDist;
+        //     }
+        // }
+        return lineList.get((new Random(System.currentTimeMillis())).nextInt(lineList.size()));
 
     }
 

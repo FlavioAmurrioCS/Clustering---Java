@@ -11,6 +11,8 @@ import java.math.MathContext;
  * idf = ln(# of total lines/ # lines containing the word)
  * http://www.tfidf.com/
  * 
+ * TF(t) = (Number of times term t appears in a document) / (Total number of terms in the document).
+ * IDF(t) = log_e(Total number of documents / Number of documents with term t in it).
  * 
  * 
  */

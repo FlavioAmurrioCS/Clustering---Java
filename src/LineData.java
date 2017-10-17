@@ -10,6 +10,7 @@ public class LineData {
     double distance;
     String lineStr;
     double sumSquare = 0;
+    int wordCount = 0;
 
     // If normalizing, consider using BigDecimal for the count
     public LineData(String str) {
@@ -18,7 +19,9 @@ public class LineData {
         lineMap = new HashMap<>();
         while (sc.hasNext()) {
             Integer id = sc.nextInt();
-            Double count = (double) sc.nextInt();
+            int value = sc.nextInt();
+            this.wordCount += value;
+            Double count = (double) value;
             lineMap.put(id, count);
             this.sumSquare += count * count;
         }
@@ -121,6 +124,44 @@ public class LineData {
 
     public String toString() {
         return "" + this.label;
+    }
+
+    public void normalize(HashMap<Integer, Double> iMap) {
+        for (Map.Entry<Integer, Double> entry : this.lineMap.entrySet()) {
+            Integer key = entry.getKey();
+            Double value = entry.getValue();
+            Double idf = iMap.get(key);
+            Double tf = value / (double) this.wordCount;
+            entry.setValue(tf * idf);
+        }
+    }
+
+    public static HashMap<Integer, Double> idfMap(ArrayList<LineData> lineList) {
+        Double size = (double) lineList.size();
+        HashSet<Integer> keySet = new HashSet<>();
+        for (LineData ld : lineList) {
+            keySet.addAll(ld.lineMap.keySet());
+        }
+        HashMap<Integer, Double> iMap = new HashMap<>();
+        for (Integer it : keySet) {
+            int count = 0;
+            for (LineData ld : lineList) {
+                if (ld.containsKey(it)) {
+                    count++;
+                }
+            }
+            double idf = size / (double) count;
+            idf = Math.log(idf);
+            iMap.put(it, idf);
+        }
+        return iMap;
+    }
+
+    public static void tfIdf(ArrayList<LineData> lineList) {
+        HashMap<Integer, Double> iMap = idfMap(lineList);
+        for (LineData ld : lineList) {
+            ld.normalize(iMap);
+        }
     }
 
 }
