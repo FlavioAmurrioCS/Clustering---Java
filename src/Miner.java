@@ -26,7 +26,7 @@ public class Miner {
         // ProgressBar pb = new ProgressBar(10, 1);
         // FTools.tittleMaker("INIT");
         // FTools.appendFile(DISTCHANGE_FILE, cls.centroids.toString());
-        for(int i = 0; i < 100; i++)
+        for(int i = 0; i < 30; i++)
         {
             // FTools.tittleMaker("Inside the loop");
             cls.classify();
@@ -49,7 +49,7 @@ public class Miner {
         {
             sum += original.get(i).euDistance(change.get(i));
         }
-        System.out.println("Sum Distance Chnage: " + sum);
+        System.out.println("Sum Distance Change: " + sum);
         return "Sum Distance Chnage: " + sum;
     }
 

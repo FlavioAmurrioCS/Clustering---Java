@@ -29,7 +29,6 @@ public class Clusters {
         while (this.centroids.size() != kCount) {
             getFarPoint(this.centroids, this.lineList);
         }
-
     }
 
     public static void getFarPoint(ArrayList<LineData> kList, ArrayList<LineData> lineList) {
