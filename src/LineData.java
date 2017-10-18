@@ -7,6 +7,9 @@ public class LineData {
 
     public static final String EUCLEADIAN = "eu";
     public static final String COSINESIM = "cos";
+    public static final String MANHATTAN = "man";
+    public static final String JACCARD = "jac";
+
     public static String DIST_METHOD = "eu";
     public static boolean TF_IDF = true;
 
@@ -34,7 +37,7 @@ public class LineData {
         sc.close();
     }
 
-    public Set<Map.Entry<Integer,Double>> entrySet() {
+    public Set<Map.Entry<Integer, Double>> entrySet() {
         return this.lineMap.entrySet();
     }
 
@@ -78,7 +81,7 @@ public class LineData {
         return this.sumSquare;
     }
 
-    private double cosDistance(LineData ld) {
+    private double cosineSimilarity(LineData ld) {
         double sum = 0;
         for (Map.Entry<Integer, Double> entry : this.entrySet()) {
             Integer key = entry.getKey();
@@ -88,7 +91,7 @@ public class LineData {
         return (sum / (this.getSumSquare() * ld.getSumSquare()));
     }
 
-    private double euDistance(LineData ld) {
+    private double euclideanDistance(LineData ld) {
         HashMap<Integer, Double> tempMap = new HashMap<>(ld.getHashMap());
         tempMap.keySet().removeAll(this.keySet());
         double sum = 0;
@@ -101,17 +104,57 @@ public class LineData {
             double temp = value - ld.get(key);
             sum += temp * temp;
         }
+        return Math.sqrt(sum);
+    }
+
+    private double manhattanDistance(LineData ld) {
+        HashMap<Integer, Double> tempMap = new HashMap<>(ld.getHashMap());
+        tempMap.keySet().removeAll(this.keySet());
+        double sum = 0;
+        for (Double it : tempMap.values()) {
+            sum += it;
+        }
+        for (Map.Entry<Integer, Double> entry : this.entrySet()) {
+            Integer key = entry.getKey();
+            Double value = entry.getValue();
+            double temp = value - ld.get(key);
+            temp = temp < 0 ? temp * -1 : temp;
+            sum += temp;
+        }
         return sum;
+    }
+
+    private double getUnionCount(LineData ld) {
+        Set<Integer> tSet = new HashSet<>(this.keySet());
+        tSet.addAll(ld.keySet());
+        return tSet.size();
+    }
+
+    private double getIntersectionCount(LineData ld) {
+        Set<Integer> aSet = new HashSet<>(this.keySet());
+        Set<Integer> bSet = new HashSet<>(ld.keySet());
+        aSet.retainAll(bSet);
+        return (double) aSet.size();
+    }
+
+    private double jaccardIndex(LineData ld) {
+        double union = this.getUnionCount(ld);
+        double intersection = this.getIntersectionCount(ld);
+        return intersection / union;
     }
 
     public double distance(LineData ld) {
         switch (LineData.DIST_METHOD) {
         case EUCLEADIAN:
-            return this.euDistance(ld);
+            return this.euclideanDistance(ld);
         case COSINESIM:
-            return this.cosDistance(ld);
+            return this.cosineSimilarity(ld);
+        case MANHATTAN:
+            return this.manhattanDistance(ld);
+        case JACCARD:
+            return this.jaccardIndex(ld);
         default:
-            return this.euDistance(ld);
+            return this.euclideanDistance(ld);
         }
     }
 
@@ -170,6 +213,7 @@ public class LineData {
         }
     }
 
+    // Can probaly add 1 to the idf to help or one to the bottom
     private static HashMap<Integer, Double> getIdfMap(ArrayList<LineData> lineList) {
         Double size = (double) lineList.size();
         HashSet<Integer> keySet = new HashSet<>();
@@ -184,8 +228,8 @@ public class LineData {
                     count++;
                 }
             }
-            double idf = size / ((double) count + 1);
-            idf = Math.log(idf) + 1;
+            double idf = size / ((double) count);
+            idf = Math.log(idf);
             iMap.put(it, idf);
         }
         return iMap;

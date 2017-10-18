@@ -13,7 +13,11 @@ public class Miner {
 
     public static void main(String[] args) {
         FTimer ft = new FTimer("Whole Process");
+        
         LineData.TF_IDF = true;
+        LineData.DIST_METHOD = LineData.EUCLEADIAN;
+        Clusters.K_METHOD = Clusters.K_PLUS_PLUS;
+
         Clusters cls = new Clusters(INPUT_FILE);
         cls.mine(0.0);
         cls.toFile(OUTPUT_FILE);

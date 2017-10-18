@@ -10,6 +10,8 @@ public class Clusters {
     public static final String K_MEANS = "kMeans";
     public static final String K_PLUS_PLUS = "kPlusPlus";
 
+    public static String K_METHOD = "kMeans";
+
     private int kCount;
     private ArrayList<LineData> centroids;
     private ArrayList<LineData> lineList;
@@ -18,7 +20,7 @@ public class Clusters {
         this.kCount = k;
         this.lineList = lineList;
         this.centroids = new ArrayList<>();
-        switch (kMethod) {
+        switch (K_METHOD){
         case K_MEANS:
             kMean();
             break;
