@@ -124,6 +124,16 @@ public class VectMap<K extends Comparable<K>> extends HashMap<K, Double> {
         return ret;
     }
 
+    public void replace(K key, double value)
+    {
+
+    }
+
+    public void setAsKeyCenter(List<VectMap<K>> vList, K key)
+    {
+
+    }
+
     public VectMap<K> square() {
         VectMap<K> ret = new VectMap<>();
         for (K key : this.keySet()) {
