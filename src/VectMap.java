@@ -3,6 +3,7 @@ import java.util.*;
 /**
  * VectMap
  */
+@SuppressWarnings("serial")
 public class VectMap<K extends Comparable<K>> extends HashMap<K, Double> {
 
     public static final String EUCLEADIAN = "eu";
@@ -15,6 +16,16 @@ public class VectMap<K extends Comparable<K>> extends HashMap<K, Double> {
 
     public VectMap() {
         super();
+    }
+
+    public VectMap(String str){
+        Scanner sc = new Scanner(str);
+        while (sc.hasNext()) {
+            Integer id = sc.nextInt();
+            double value = (double) sc.nextInt();
+            this.put((K)id, value);
+        }
+        sc.close();
     }
 
     public static void setDistMethod(String str) {
@@ -162,21 +173,21 @@ public class VectMap<K extends Comparable<K>> extends HashMap<K, Double> {
         this.setAsCenter(vectList);
     }
 
-    // public void setAsOccurence(ArrayList<?> vList) {
-    //     this.clear();
-    //     HashSet<K> kSet = new HashSet<>();
-    //     for (VectMap<K> vect : vList) {
-    //         kSet.addAll(vect.keySet());
-    //     }
-    //     for (K key : kSet) {
-    //         int sum = 0;
-    //         for (VectMap<K> vect : vList) {
-    //             if (vect.containsKey(key))
-    //                 sum++;
-    //         }
-    //         this.put(key, (double) sum);
-    //     }
-    // }
+    public void setAsOccurence(ArrayList<Object> vList) {
+        this.clear();
+        HashSet<K> kSet = new HashSet<>();
+        for (Obeject vect : vList) {
+            kSet.addAll(vect.keySet());
+        }
+        for (K key : kSet) {
+            int sum = 0;
+            for (VectMap<K> vect : vList) {
+                if (vect.containsKey(key))
+                    sum++;
+            }
+            this.put(key, (double) sum);
+        }
+    }
 
     public VectMap<K> square() {
         VectMap<K> ret = new VectMap<>();
@@ -315,24 +326,24 @@ public class VectMap<K extends Comparable<K>> extends HashMap<K, Double> {
         }
     }
 
-    // public void setAsIdf(ArrayList<?> vList) {
-    //     this.clear();
-    //     HashSet<K> kSet = new HashSet<>();
-    //     double totalLines = vList.size();
-    //     for (VectMap<K> vect : vList) {
-    //         kSet.addAll(vect.keySet());
-    //     }
-    //     for (K key : kSet) {
-    //         int sum = 0;
-    //         for (VectMap<K> vect : vList) {
-    //             if (vect.containsKey(key))
-    //                 sum++;
-    //         }
-    //         double idf = totalLines / (double) sum;
-    //         idf = Math.log(idf);
-    //         this.put(key, idf);
-    //     }
-    // }
+    public void setAsIdf(ArrayList<?> vList) {
+        this.clear();
+        HashSet<K> kSet = new HashSet<>();
+        double totalLines = vList.size();
+        for (VectMap<K> vect : vList) {
+            kSet.addAll(vect.keySet());
+        }
+        for (K key : kSet) {
+            int sum = 0;
+            for (VectMap<K> vect : vList) {
+                if (vect.containsKey(key))
+                    sum++;
+            }
+            double idf = totalLines / (double) sum;
+            idf = Math.log(idf);
+            this.put(key, idf);
+        }
+    }
 
     private void tf() {
         double size = this.sum();
@@ -350,7 +361,7 @@ public class VectMap<K extends Comparable<K>> extends HashMap<K, Double> {
 
     public static void performTfIdf(ArrayList<VectMap<Integer>> vList) {
         VectMap<Integer> idfMap = new VectMap<>();
-//        idfMap.setAsIdf(vList);
+        idfMap.setAsIdf(vList);
         for (VectMap<Integer> vect : vList) {
             vect.tfIdf(idfMap);
         }
