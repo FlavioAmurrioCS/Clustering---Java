@@ -17,13 +17,15 @@ public class Miner {
         double[] aVal = { 3, 5};
         double[] bVal = { 1, 1};
 
+        VectMap.setDistMethod(VectMap.EUCLEADIAN);
+
         VectMap<String> a = new VectMap<>(key, aVal);
         VectMap<String> b = new VectMap<>(key, bVal);
 
-        double dist = a.euclideanDist(b);
+        double dist = a.distance(b);
 
-        System.out.println(a.toOrderString());
-        System.out.println(b.toOrderString());
+        System.out.println(a.toString());
+        System.out.println(b.toString());
         System.out.println("Distance: " + dist);
 
         // FTimer ft = new FTimer("Whole Process");
