@@ -152,7 +152,7 @@ public class VectMap<K extends Comparable<K>> extends HashMap<K, Double> {
             this.remove(key);
     }
 
-    public void setAsKeyCenter(List<VectMap<K>> vList, K key) {
+    public void setAsKeyCenter(ArrayList<VectMap<K>> vList, K key) {
         ArrayList<VectMap<K>> vectList = new ArrayList<>();
         for (VectMap<K> vect : vList) {
             if (vect.containsKey(key)) {
@@ -162,7 +162,7 @@ public class VectMap<K extends Comparable<K>> extends HashMap<K, Double> {
         this.setAsCenter(vectList);
     }
 
-    public void setAsOccurence(List<VectMap<K>> vList) {
+    public void setAsOccurence(ArrayList<VectMap<K>> vList) {
         this.clear();
         HashSet<K> kSet = new HashSet<>();
         for (VectMap<K> vect : vList) {
@@ -298,7 +298,7 @@ public class VectMap<K extends Comparable<K>> extends HashMap<K, Double> {
         return kSet;
     }
 
-    public void setAsCenter(List<VectMap<K>> vList) {
+    public void setAsCenter(ArrayList<VectMap<K>> vList) {
         this.clear();
         HashSet<K> kSet = new HashSet<>();
         double size = vList.size();
@@ -315,7 +315,7 @@ public class VectMap<K extends Comparable<K>> extends HashMap<K, Double> {
         }
     }
 
-    public void setAsIdf(List<VectMap<K>> vList) {
+    public void setAsIdf(ArrayList<?> vList) {
         this.clear();
         HashSet<K> kSet = new HashSet<>();
         double totalLines = vList.size();
@@ -348,7 +348,7 @@ public class VectMap<K extends Comparable<K>> extends HashMap<K, Double> {
         this.putAll(vect);
     }
 
-    public static void performTfIdf(List<VectMap<Integer>> vList) {
+    public static void performTfIdf(ArrayList<VectMap<Integer>> vList) {
         VectMap<Integer> idfMap = new VectMap<>();
         idfMap.setAsIdf(vList);
         for (VectMap<Integer> vect : vList) {
