@@ -5,8 +5,20 @@ import java.util.*;
  */
 public class VectMap<K extends Comparable<K>> extends HashMap<K, Double> {
 
+    public static final String EUCLEADIAN = "eu";
+    public static final String COSINESIM = "cos";
+    public static final String MANHATTAN = "man";
+    public static final String JACCARD = "jac";
+    public static final String EUCLEADIAN_SQUARE = "euSq";
+
+    private static String distMethod;
+
     public VectMap() {
         super();
+    }
+
+    public static void setDistMethod(String str) {
+        VectMap.distMethod = str;
     }
 
     public VectMap(K[] key, double[] arr) {
@@ -21,16 +33,10 @@ public class VectMap<K extends Comparable<K>> extends HashMap<K, Double> {
     }
 
     public String toString() {
-        StringBuilder sb = new StringBuilder();
-        for (K key : this.keySet()) {
-            sb.append("(K: " + key.toString() + ", V: " + this.get(key).toString() + "), ");
-        }
-        sb.append("\b");
-        return sb.toString();
+        return this.toString(this.getSortedKeys());
     }
 
-    public String toOrderString() {
-        ArrayList<K> keyList = this.getSortedKeys();
+    public String toString(Collection<K> keyList) {
         StringBuilder sb = new StringBuilder();
         for (K key : keyList) {
             sb.append(key.toString() + ": " + this.getValue(key).toString() + ", ");
@@ -124,14 +130,52 @@ public class VectMap<K extends Comparable<K>> extends HashMap<K, Double> {
         return ret;
     }
 
-    public void replace(K key, double value)
-    {
-
+    public void replace(K key, double value) {
+        this.put(key, value);
     }
 
-    public void setAsKeyCenter(List<VectMap<K>> vList, K key)
-    {
+    public void addPlus(K key, double value) {
+        double val = this.getValue(key);
+        double sum = val + value;
+        if (sum != 0)
+            this.put(key, sum);
+        else
+            this.remove(key);
+    }
 
+    public void addMinus(K key, double value) {
+        double val = this.getValue(key);
+        double sum = val - value;
+        if (sum != 0)
+            this.put(key, sum);
+        else
+            this.remove(key);
+    }
+
+    public void setAsKeyCenter(List<VectMap<K>> vList, K key) {
+        ArrayList<VectMap<K>> vectList = new ArrayList<>();
+        for (VectMap<K> vect : vList) {
+            if (vect.containsKey(key)) {
+                vectList.add(vect);
+            }
+        }
+        this.setAsCenter(vectList);
+    }
+
+    public void setAsOccurence(List<VectMap<K>> vList) {
+        this.clear();
+        HashSet<K> kSet = new HashSet<>();
+        for (VectMap<K> vect : vList) {
+            kSet.addAll(vect.keySet());
+        }
+        for (K key : kSet) {
+            int sum = 0;
+            for (VectMap<K> vect : vList) {
+                if (vect.containsKey(key))
+                    sum++;
+            }
+            this.put(key, (double) sum);
+        }
     }
 
     public VectMap<K> square() {
@@ -169,10 +213,10 @@ public class VectMap<K extends Comparable<K>> extends HashMap<K, Double> {
                 keyRem.add(key);
             }
         }
-        this.keySet().remove(keyRem);
+        this.keySet().removeAll(keyRem);
     }
 
-    public double eucleadianDistance(VectMap<K> vect) {
+    public double euclideanDist(VectMap<K> vect) {
         HashSet<K> kSet = this.getKeyUnion(vect);
         double sum = 0;
         for (K key : kSet) {
@@ -184,7 +228,19 @@ public class VectMap<K extends Comparable<K>> extends HashMap<K, Double> {
         return Math.sqrt(sum);
     }
 
-    public double manhattanDistance(VectMap<K> vect) {
+    public double euclideanSquare(VectMap<K> vect) {
+        HashSet<K> kSet = this.getKeyUnion(vect);
+        double sum = 0;
+        for (K key : kSet) {
+            double a = this.getValue(key);
+            double b = vect.getValue(key);
+            double diff = a - b;
+            sum += (diff * diff);
+        }
+        return sum;
+    }
+
+    public double manhattanDist(VectMap<K> vect) {
         HashSet<K> kSet = this.getKeyUnion(vect);
         double sum = 0;
         for (K key : kSet) {
@@ -209,6 +265,23 @@ public class VectMap<K extends Comparable<K>> extends HashMap<K, Double> {
         double union = (double) (this.getKeyUnion(vect).size());
         double intersection = (double) (this.getKeyIntersection(vect).size());
         return intersection / union;
+    }
+
+    public double distance(VectMap<K> vect) {
+        switch (VectMap.distMethod) {
+        case EUCLEADIAN:
+            return this.euclideanDist(vect);
+        case COSINESIM:
+            return this.cosineSimilarity(vect);
+        case MANHATTAN:
+            return this.manhattanDist(vect);
+        case JACCARD:
+            return this.jaccardIndex(vect);
+        case EUCLEADIAN_SQUARE:
+            return this.euclideanSquare(vect);
+        default:
+            return this.euclideanSquare(vect);
+        }
     }
 
     public HashSet<K> getKeyUnion(VectMap<K> vect) {
@@ -273,5 +346,14 @@ public class VectMap<K extends Comparable<K>> extends HashMap<K, Double> {
         VectMap<K> vect = this.multiply(idfMap);
         this.clear();
         this.putAll(vect);
+    }
+
+    public static void performTfIdf(List<VectMap<Integer>> vList) {
+        VectMap<Integer> idfMap = new VectMap<>();
+        idfMap.setAsIdf(vList);
+        for (VectMap<Integer> vect : vList) {
+            vect.tfIdf(idfMap);
+        }
+
     }
 }

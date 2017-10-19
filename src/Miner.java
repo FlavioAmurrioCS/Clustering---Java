@@ -20,7 +20,7 @@ public class Miner {
         VectMap<String> a = new VectMap<>(key, aVal);
         VectMap<String> b = new VectMap<>(key, bVal);
 
-        double dist = a.eucleadianDistance(b);
+        double dist = a.euclideanDist(b);
 
         System.out.println(a.toOrderString());
         System.out.println(b.toOrderString());
