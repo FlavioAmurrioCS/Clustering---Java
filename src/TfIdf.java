@@ -7,7 +7,7 @@ import java.math.MathContext;
 /**
  * TfIdf
  * tf * idf
- * tf = (# of elected word / # of total words)
+ * tf = (# of selected word / # of total words)
  * idf = ln(# of total lines/ # lines containing the word)
  * http://www.tfidf.com/
  * 

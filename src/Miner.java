@@ -12,16 +12,30 @@ public class Miner {
     public static final String DISTCHANGE_FILE = "./res/gen/DisChange.txt";
 
     public static void main(String[] args) {
-        FTimer ft = new FTimer("Whole Process");
-        
-        LineData.TF_IDF = true;
-        LineData.DIST_METHOD = LineData.EUCLEADIAN;
-        Clusters.K_METHOD = Clusters.K_PLUS_PLUS;
 
-        Clusters cls = new Clusters(INPUT_FILE);
-        cls.mine(0.0);
-        cls.toFile(OUTPUT_FILE);
-        ft.print();
+        String[] key = { "x", "y"};
+        double[] aVal = { 3, 5};
+        double[] bVal = { 1, 1};
+
+        VectMap<String> a = new VectMap<>(key, aVal);
+        VectMap<String> b = new VectMap<>(key, bVal);
+
+        double dist = a.eucleadianDistance(b);
+
+        System.out.println(a.toOrderString());
+        System.out.println(b.toOrderString());
+        System.out.println("Distance: " + dist);
+
+        // FTimer ft = new FTimer("Whole Process");
+
+        // LineData.TF_IDF = true;
+        // LineData.DIST_METHOD = LineData.EUCLEADIAN;
+        // Clusters.K_METHOD = Clusters.K_PLUS_PLUS;
+
+        // Clusters cls = new Clusters(INPUT_FILE);
+        // cls.mine(0.0);
+        // cls.toFile(OUTPUT_FILE);
+        // ft.print();
     }
 }
 
