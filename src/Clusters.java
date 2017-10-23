@@ -278,8 +278,8 @@ public class Clusters {
         for (int i = 0; i < this.centroids.size(); i++) {
             TextData td = this.centroids.get(i);
             ArrayList<TextData> tList = cls.get(i);
-            // sum += SSE(td, tList);
-            sum += SSE(tList);
+            sum += SSE(td, tList);
+            // sum += SSE(tList);
 
         }
         ft.time();
