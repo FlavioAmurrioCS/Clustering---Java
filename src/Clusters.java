@@ -153,9 +153,9 @@ public class Clusters {
         case FAR_POINT:
             return getFarPoint(sList);
         case FAR_POINT_RANDOM:
-            return getFarPointRandom(sList, 10);
+            return getFarPointRandom(sList, 5);
         default:
-            return getFarPointRandom(sList, 10);
+            return getFarPointRandom(sList, 5);
         }
     }
 
@@ -176,7 +176,6 @@ public class Clusters {
     }
 
     private TextData getFarPointRandom(ArrayList<TextData> sList, int top) {
-        TextData ret = null;
         ArrayList<Pair<TextData>> pList = new ArrayList<>();
         for (TextData it : sList) {
             double sumDist = 0;
@@ -187,7 +186,9 @@ public class Clusters {
         }
         Collections.sort(pList);
         int index = (new Random(System.currentTimeMillis())).nextInt(top);
-        return pList.get(index).obj;
+        TextData ret = pList.get(index).obj;
+        pList.clear();
+        return ret;
     }
 
     private ArrayList<ArrayList<TextData>> getCluster() {
