@@ -13,20 +13,25 @@ public class Miner {
 
     public static void main(String[] args) {
 
-        String[] key = { "x", "y"};
-        double[] aVal = { 3, 5};
-        double[] bVal = { 1, 1};
+        FTools.SHOW_LOG = false;
+        TextData.TF_IDF = true;
 
-        VectMap.setDistMethod(VectMap.EUCLEADIAN);
+        ArrayList<TextData> tList = TextData.fileToList(INPUT_FILE);
 
-        VectMap<String> a = new VectMap<>(key, aVal);
-        VectMap<String> b = new VectMap<>(key, bVal);
+        // String[] key = { "x", "y"};
+        // double[] aVal = { 3, 5};
+        // double[] bVal = { 1, 1};
 
-        double dist = a.distance(b);
+        // VectMap.setDistMethod(VectMap.EUCLEADIAN);
 
-        System.out.println(a.toString());
-        System.out.println(b.toString());
-        System.out.println("Distance: " + dist);
+        // VectMap<String> a = new VectMap<>(key, aVal);
+        // VectMap<String> b = new VectMap<>(key, bVal);
+
+        // double dist = a.distance(b);
+
+        // System.out.println(a.toString());
+        // System.out.println(b.toString());
+        // System.out.println("Distance: " + dist);
 
         // FTimer ft = new FTimer("Whole Process");
 

@@ -13,8 +13,8 @@ public class Clusters {
     public static String K_METHOD = "kMeans";
 
     private int kCount;
-    private ArrayList<LineData> centroids;
-    private ArrayList<LineData> lineList;
+    private ArrayList<TextData> centroids;
+    private ArrayList<TextData> lineList;
 
     public Clusters(int k, String kMethod, ArrayList<LineData> lineList) {
         this.kCount = k;

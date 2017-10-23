@@ -163,32 +163,6 @@ public class VectMap<K extends Comparable<K>> extends HashMap<K, Double> {
             this.remove(key);
     }
 
-    public void setAsKeyCenter(ArrayList<VectMap<K>> vList, K key) {
-        ArrayList<VectMap<K>> vectList = new ArrayList<>();
-        for (VectMap<K> vect : vList) {
-            if (vect.containsKey(key)) {
-                vectList.add(vect);
-            }
-        }
-        this.setAsCenter(vectList);
-    }
-
-    public void setAsOccurence(ArrayList<Object> vList) {
-        this.clear();
-        HashSet<K> kSet = new HashSet<>();
-        for (Obeject vect : vList) {
-            kSet.addAll(vect.keySet());
-        }
-        for (K key : kSet) {
-            int sum = 0;
-            for (VectMap<K> vect : vList) {
-                if (vect.containsKey(key))
-                    sum++;
-            }
-            this.put(key, (double) sum);
-        }
-    }
-
     public VectMap<K> square() {
         VectMap<K> ret = new VectMap<>();
         for (K key : this.keySet()) {
@@ -309,24 +283,22 @@ public class VectMap<K extends Comparable<K>> extends HashMap<K, Double> {
         return kSet;
     }
 
-    public void setAsCenter(ArrayList<VectMap<K>> vList) {
+
+    private void tf() {
+        double size = this.sum();
+        VectMap<K> vect = this.divide(size);
         this.clear();
-        HashSet<K> kSet = new HashSet<>();
-        double size = vList.size();
-        for (VectMap<K> vect : vList) {
-            kSet.addAll(vect.keySet());
-        }
-        for (K key : kSet) {
-            double sum = 0;
-            for (VectMap<K> vect : vList) {
-                sum += vect.getValue(key);
-            }
-            sum /= size;
-            this.put(key, sum);
-        }
+        this.putAll(vect);
     }
 
-    public void setAsIdf(ArrayList<?> vList) {
+    public void tfIdf(VectMap<K> idfMap) {
+        this.tf();
+        VectMap<K> vect = this.multiply(idfMap);
+        this.clear();
+        this.putAll(vect);
+    }
+
+    public void setAsIdf(ArrayList<VectMap<K>> vList) {
         this.clear();
         HashSet<K> kSet = new HashSet<>();
         double totalLines = vList.size();
@@ -345,26 +317,54 @@ public class VectMap<K extends Comparable<K>> extends HashMap<K, Double> {
         }
     }
 
-    private void tf() {
-        double size = this.sum();
-        VectMap<K> vect = this.divide(size);
-        this.clear();
-        this.putAll(vect);
-    }
-
-    public void tfIdf(VectMap<K> idfMap) {
-        this.tf();
-        VectMap<K> vect = this.multiply(idfMap);
-        this.clear();
-        this.putAll(vect);
-    }
-
-    public static void performTfIdf(ArrayList<VectMap<Integer>> vList) {
-        VectMap<Integer> idfMap = new VectMap<>();
+    public static void performTfIdf(ArrayList<VectMap<?>> vList) {
+        VectMap idfMap = new VectMap<>();
         idfMap.setAsIdf(vList);
-        for (VectMap<Integer> vect : vList) {
+        for (VectMap vect : vList) {
             vect.tfIdf(idfMap);
         }
+    }
 
+    public void setAsOccurence(ArrayList<VectMap<K>> vList) {
+        this.clear();
+        HashSet<K> kSet = new HashSet<>();
+        for (VectMap<K> vect : vList) {
+            kSet.addAll(vect.keySet());
+        }
+        for (K key : kSet) {
+            int sum = 0;
+            for (VectMap<K> vect : vList) {
+                if (vect.containsKey(key))
+                    sum++;
+            }
+            this.put(key, (double) sum);
+        }
+    }
+
+    public void setAsCenter(ArrayList<VectMap<K>> vList) {
+        this.clear();
+        HashSet<K> kSet = new HashSet<>();
+        double size = vList.size();
+        for (VectMap<K> vect : vList) {
+            kSet.addAll(vect.keySet());
+        }
+        for (K key : kSet) {
+            double sum = 0;
+            for (VectMap<K> vect : vList) {
+                sum += vect.getValue(key);
+            }
+            sum /= size;
+            this.put(key, sum);
+        }
+    }
+
+    public void setAsKeyCenter(ArrayList<VectMap<K>> vList, K key) {
+        ArrayList<VectMap<K>> vectList = new ArrayList<>();
+        for (VectMap<K> vect : vList) {
+            if (vect.containsKey(key)) {
+                vectList.add(vect);
+            }
+        }
+        this.setAsCenter(vectList);
     }
 }

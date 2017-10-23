@@ -13,6 +13,7 @@ public class FTimer {
     public FTimer(String method) {
         this.cTime = System.currentTimeMillis();
         this.method = method;
+        System.out.print(this.method + " ...");
     }
 
     public String toString() {
@@ -41,7 +42,7 @@ public class FTimer {
         if (this.method.equals("")) {
             System.out.println("Time: " + timeStr);
         } else {
-            System.out.println(this.method + " took: " + timeStr);
+            System.out.println("\r" + this.method + " took: " + timeStr);
         }
     }
 }

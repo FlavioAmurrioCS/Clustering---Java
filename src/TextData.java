@@ -26,10 +26,15 @@ public class TextData extends VectMap<Integer> implements Comparable<TextData> {
     //     sc.close();
     // }
 
-    public TextData(String str, int id) {
+    public TextData(String str) {
         super(str);
         this.lineStr = str;
-        this.itemID = id;
+        this.itemID = 0;
+    }
+    public TextData()
+    {
+        super();
+        this.itemID = -1;
     }
 
     public void setLabel(int k) {
@@ -56,7 +61,8 @@ public class TextData extends VectMap<Integer> implements Comparable<TextData> {
         return this.itemID - td.itemID;
     }
 
-    public ArrayList<TextData> fileToList(String filename) {
+    @SuppressWarnings("unchecked")
+    public static ArrayList<TextData> fileToList(String filename) {
         FTimer ft = new FTimer("Reading Input File");
         Scanner sc = FTools.fileOpener(filename);
         ArrayList<TextData> retList = new ArrayList<>();
@@ -66,17 +72,17 @@ public class TextData extends VectMap<Integer> implements Comparable<TextData> {
         sc.close();
         ft.time();
 
-        VectMap<Integer> docCount = new VectMap<>();
-        docCount.setAsOccurence(retList);
-        for(Integer key : this.keySet())
-        {
-            double value = docCount.getValue(key);
-            System.out.println(key + " , " + value + "\n");
-        }
+        // TextData docCount = new TextData();
+        // docCount.setAsOccurence(retList);
+        // for(Integer key : docCount.keySet())
+        // {
+        //     double value = docCount.getValue(key);
+        //     System.out.println(key + " , " + value + "\n");
+        // }
 
         if (TF_IDF) {
             FTimer ft2 = new FTimer("Normalizing Data");
-            VectMap<Integer> idfMap = new VectMap<>();
+            VectMap idfMap = new VectMap<>();
             idfMap.setAsIdf(retList);
             for (TextData vect : retList) {
                 vect.tfIdf(idfMap);

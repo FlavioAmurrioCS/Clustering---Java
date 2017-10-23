@@ -8,12 +8,15 @@ import java.lang.reflect.Constructor;
  */
 public class FTools {
 
+    public static boolean SHOW_LOG = true;
+
     public static Scanner fileOpener(String filename) {
         try {
             File file = new File(filename);
             FileInputStream fis = new FileInputStream(file);
             Scanner sc = new Scanner(fis);
-            System.out.println("Openning " + filename + "...");
+            if(SHOW_LOG)
+                System.out.println("Openning " + filename + "...");
             return sc;
 
         } catch (Exception e) {
@@ -45,7 +48,8 @@ public class FTools {
         try {
             File file = new File(filename);
             PrintWriter pw = new PrintWriter(file);
-            System.out.println("Writing " + filename + "...");
+            if(SHOW_LOG)
+                System.out.println("Writing " + filename + "...");
             return pw;
         } catch (Exception e) {
             System.out.println("Writing Error");
@@ -161,23 +165,23 @@ public class FTools {
 
     // }
 
-    @SuppressWarnings("unchecked")
-    public static ArrayList<Object> fileToList(String filename, Class cls)
-    {
-        ArrayList retList = new ArrayList<>();
-        Constructor constructor = null;
-        Scanner sc = FTools.fileOpener(filename);
-        try {
-            constructor = cls.getConstructor(String.class);
-            while (sc.hasNext()) {
-                retList.add(constructor.newInstance(sc.nextLine()));
-            }
-        } catch (Exception e) {
-            //TODO: handle exception
-        }
-        sc.close();
-        return retList;
-    }
+    // @SuppressWarnings("unchecked")
+    // public static ArrayList<Object> fileToList(String filename, Class cls)
+    // {
+    //     ArrayList retList = new ArrayList<>();
+    //     Constructor constructor = null;
+    //     Scanner sc = FTools.fileOpener(filename);
+    //     try {
+    //         constructor = cls.getConstructor(String.class);
+    //         while (sc.hasNext()) {
+    //             retList.add(constructor.newInstance(sc.nextLine()));
+    //         }
+    //     } catch (Exception e) {
+    //         //TODO: handle exception
+    //     }
+    //     sc.close();
+    //     return retList;
+    // }
 
     // public static void fileToList(String filename, Class cls, ArrayList<?> retList)
     // {
