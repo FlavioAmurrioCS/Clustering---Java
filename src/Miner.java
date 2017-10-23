@@ -28,7 +28,7 @@ public class Miner {
             Clusters model = new Clusters(INPUT_FILE);
             int sumSq = model.mine(1.5);
             long time = System.currentTimeMillis();
-            model.toFile(sumSq + " - " + OUTPUT_FILE + "-" + time + ".txt");
+            model.toFile(sumSq + "-" + OUTPUT_FILE + "-" + time + ".txt");
         }        
     }
 
