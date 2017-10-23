@@ -9,40 +9,71 @@ public class Miner {
     public static final String INPUT_FILE = "./res/original/1507224963_4758732_input.dat";
     public static final String SCRATCH_FILE = "./res/gen/scratch.txt";
     public static final String OUTPUT_FILE = "./res/gen/output.txt";
+    public static final String FEAT_FILE = "./res/gen/featfile.txt";
+    public static final String MAP_FILE = "./res/gen/mapfile.txt";
     public static final String DISTCHANGE_FILE = "./res/gen/DisChange.txt";
 
     public static void main(String[] args) {
-
+        // reIndex();
+        // reindex2();
         FTools.SHOW_LOG = false;
         TextData.TF_IDF = true;
+        VectMap.setDistMethod(VectMap.MANHATTAN);
+        Clusters.INITIAL_K = Clusters.K_SPECIAL;
+        printInfo();
 
-        ArrayList<TextData> tList = TextData.fileToList(INPUT_FILE);
+        Clusters model = new Clusters(INPUT_FILE);
+        model.mine(1.5);
+        model.toFile(OUTPUT_FILE);
+    }
 
-        // String[] key = { "x", "y"};
-        // double[] aVal = { 3, 5};
-        // double[] bVal = { 1, 1};
+    public static void printInfo() {
+        StringBuilder sb = new StringBuilder();
+        sb.append("Normalize(Tf-Idf): " + TextData.TF_IDF);
+        sb.append("\nDistance Method: " + VectMap.distMethod);
+        sb.append("\nKMethod: " + Clusters.K_METHOD);
+        sb.append("\nInitial K: " + Clusters.INITIAL_K);
+        System.out.println(sb.toString());
 
-        // VectMap.setDistMethod(VectMap.EUCLEADIAN);
+    }
 
-        // VectMap<String> a = new VectMap<>(key, aVal);
-        // VectMap<String> b = new VectMap<>(key, bVal);
+    public static void reIndex() {
+        HashSet<Integer> sSet = new HashSet<>();
+        Scanner sc = FTools.fileOpener(INPUT_FILE);
+        while (sc.hasNextInt()) {
+            sSet.add(sc.nextInt());
+            sc.next();
+        }
+        sc.close();
+        ArrayList<Integer> sList = new ArrayList<>(sSet);
+        Collections.sort(sList);
+        FTools.listToFile(sList, FEAT_FILE);
+    }
+    public static void reindex2()
+    {
+        HashMap<String, Integer> fMap = FTools.fileToHashMap(FEAT_FILE);
+        ArrayList<String> output = new ArrayList<>();
+        Scanner sc = FTools.fileOpener(INPUT_FILE);
+        while(sc.hasNextLine())
+        {
+            String line = sc.nextLine();
+            String[] sp = line.split(" ");
+            for(int i = 0; i < sp.length; i+=2)
+            {
+                String n = fMap.get(sp[i]).toString();
+                sp[i] = n;
+            }
+            output.add(arrToString(sp));
+        }
+        FTools.listToFile(output, MAP_FILE);
+    }
 
-        // double dist = a.distance(b);
-
-        // System.out.println(a.toString());
-        // System.out.println(b.toString());
-        // System.out.println("Distance: " + dist);
-
-        // FTimer ft = new FTimer("Whole Process");
-
-        // LineData.TF_IDF = true;
-        // LineData.DIST_METHOD = LineData.EUCLEADIAN;
-        // Clusters.K_METHOD = Clusters.K_PLUS_PLUS;
-
-        // Clusters cls = new Clusters(INPUT_FILE);
-        // cls.mine(0.0);
-        // cls.toFile(OUTPUT_FILE);
-        // ft.print();
+    public static String arrToString(String[] arr){
+        StringBuilder sb = new StringBuilder();
+        for(String str : arr){
+            sb.append(str + " ");
+        }
+        return sb.toString().trim();
     }
 }
 

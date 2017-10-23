@@ -1,7 +1,7 @@
 import java.util.*;
 
 /**
- * LineData
+ * TextData
  */
 @SuppressWarnings("serial")
 public class TextData extends VectMap<Integer> implements Comparable<TextData> {
@@ -31,6 +31,15 @@ public class TextData extends VectMap<Integer> implements Comparable<TextData> {
         this.lineStr = str;
         this.itemID = 0;
     }
+
+    public TextData(VectMap<Integer> vect)
+    {
+        super();
+        this.putAll(vect);
+        this.itemID = -1;
+    }
+
+
     public TextData()
     {
         super();
@@ -54,7 +63,7 @@ public class TextData extends VectMap<Integer> implements Comparable<TextData> {
     }
 
     public String toString() {
-        return "" + this.label;
+        return "" + (this.label + 1);
     }
 
     public int compareTo(TextData td) {

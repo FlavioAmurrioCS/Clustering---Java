@@ -6,13 +6,13 @@ import java.util.*;
 @SuppressWarnings("serial")
 public class VectMap<K extends Comparable<K>> extends HashMap<K, Double> {
 
-    public static final String EUCLEADIAN = "eu";
-    public static final String COSINESIM = "cos";
-    public static final String MANHATTAN = "man";
-    public static final String JACCARD = "jac";
-    public static final String EUCLEADIAN_SQUARE = "euSq";
+    public static final String EUCLEADIAN = "eucleadian";
+    public static final String COSINESIM = "cosine";
+    public static final String MANHATTAN = "manhattan";
+    public static final String JACCARD = "jaccard";
+    public static final String EUCLEADIAN_SQUARE = "eucleadianSquare";
 
-    private static String distMethod;
+    public static String distMethod = MANHATTAN;
 
     public VectMap() {
         super();

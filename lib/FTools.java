@@ -2,6 +2,7 @@ import java.io.*;
 import java.util.*;
 import java.lang.*;
 import java.lang.reflect.Constructor;
+import java.util.HashMap;
 
 /**
  * Tools
@@ -25,14 +26,14 @@ public class FTools {
         return null;
     }
 
-    // public static ArrayList<String> fileToList(String filename) {
-    //     Scanner sc = fileOpener(filename);
-    //     ArrayList<String> arrList = new ArrayList<>();
-    //     while (sc.hasNext()) {
-    //         arrList.add(sc.nextLine());
-    //     }
-    //     return arrList;
-    // }
+    public static ArrayList<String> fileToList(String filename) {
+        Scanner sc = fileOpener(filename);
+        ArrayList<String> arrList = new ArrayList<>();
+        while (sc.hasNext()) {
+            arrList.add(sc.nextLine());
+        }
+        return arrList;
+    }
 
     public static HashSet<String> fileToHashSet(String filename) {
         HashSet<String> hSet = new HashSet<>();
@@ -197,5 +198,30 @@ public class FTools {
     //     }
     //     sc.close();
     // }
+
+    public void textify(String input, String features, String output)
+    {
+        ArrayList<String> strList = new ArrayList<>();
+        Scanner sc = fileOpener(features);
+        while(sc.hasNext()){
+            strList.add(sc.nextLine());
+        }
+        sc.close();
+
+        ArrayList<String> lines = new ArrayList<>();
+        sc = fileOpener(input);
+
+
+    }
+
+    public static HashMap<String, Integer> fileToHashMap(String filename){
+        ArrayList<String> sList = fileToList(filename);
+        HashMap<String, Integer> fMap = new HashMap<>();
+        for(int i = 0; i < sList.size(); i++)
+        {
+            fMap.put(sList.get(i), i);
+        }
+        return fMap;
+    }
 
 }
