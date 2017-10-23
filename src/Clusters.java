@@ -28,11 +28,19 @@ public class Clusters {
     private ArrayList<TextData> centroids;
     private ArrayList<TextData> dList;
 
-    public Clusters(int k, String kMethod, ArrayList<TextData> dList) {
+    public Clusters(int k, ArrayList<TextData> dList) {
         this.kCount = k;
         this.dList = dList;
         this.centroids = new ArrayList<>();
-        K_METHOD = kMethod;
+        // this.kMethod();
+    }
+
+    public Clusters(String filename) {
+        this(DEFAULT_K, TextData.fileToList(filename));
+    }
+
+    public void kMethod() {
+        this.centroids.clear();
         switch (K_METHOD) {
         case K_MEANS:
             kMeans();
@@ -43,10 +51,6 @@ public class Clusters {
         default:
             kMeanPlusPlus();
         }
-    }
-
-    public Clusters(String filename) {
-        this(DEFAULT_K, K_PLUS_PLUS, TextData.fileToList(filename));
     }
 
     private void kMeans() {
@@ -245,26 +249,38 @@ public class Clusters {
         }
         this.classify();
         ft.time();
-        return (int)sumSSE();
+        return (int) sumSSE();
     }
 
-    public double SSE(TextData cent, ArrayList<TextData> tList){
+    public double SSE(TextData cent, ArrayList<TextData> tList) {
         double sum = 0;
-        for(TextData td : tList){
-            sum += td.euclideanSquare(cent);
+        for (TextData td : tList) {
+            sum += td.distance(cent);
         }
         return sum;
     }
 
-    public double sumSSE(){
+    public double SSE(ArrayList<TextData> tList) {
+        double sum = 0;
+        for (TextData t : tList) {
+            for (TextData d : tList) {
+                sum += t.distance(d);
+            }
+        }
+        return sum;
+    }
+
+    public double sumSSE() {
         FTimer ft = new FTimer("Sum Square");
         ArrayList<ArrayList<TextData>> cls = getCluster();
+        this.reCenter();
         double sum = 0;
-        for(int i = 0; i < this.centroids.size(); i++)
-        {
+        for (int i = 0; i < this.centroids.size(); i++) {
             TextData td = this.centroids.get(i);
             ArrayList<TextData> tList = cls.get(i);
-            sum+= SSE(td, tList);
+            // sum += SSE(td, tList);
+            sum += SSE(tList);
+
         }
         ft.time();
         return sum;

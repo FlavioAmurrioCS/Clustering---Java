@@ -19,18 +19,20 @@ public class Miner {
 
         FTools.SHOW_LOG = false;
         TextData.TF_IDF = true;
-        VectMap.setDistMethod(VectMap.MANHATTAN);
+        VectMap.setDistMethod(VectMap.EUCLEADIAN_SQUARE);
         Clusters.INITIAL_K = Clusters.K_RANDOM;
         Clusters.OTHERPOINT = Clusters.FAR_POINT_RANDOM;
-        printInfo();
+        Clusters.K_METHOD = Clusters.K_PLUS_PLUS;
+        Clusters model = new Clusters(INPUT_FILE);
 
         
 
         while(true){
-            Clusters model = new Clusters(INPUT_FILE);            
+            printInfo();
+            model.kMethod();                        
             int sumSq = model.mine(1.5);
             long time = System.currentTimeMillis();
-            String filename = OUTPUT_FILE + "-" + sumSq + "-"+ time + ".txt";
+            String filename = OUTPUT_FILE + "-" + VectMap.distMethod + "-" + sumSq + "-"+ time + ".txt";
             model.toFile(filename);
         }        
     }
