@@ -24,9 +24,10 @@ public class Miner {
         Clusters.OTHERPOINT = Clusters.FAR_POINT_RANDOM;
         printInfo();
 
-        Clusters model = new Clusters(INPUT_FILE);
+        
 
-        while(true){            
+        while(true){
+            Clusters model = new Clusters(INPUT_FILE);            
             int sumSq = model.mine(1.5);
             long time = System.currentTimeMillis();
             String filename = OUTPUT_FILE + "-" + sumSq + "-"+ time + ".txt";
