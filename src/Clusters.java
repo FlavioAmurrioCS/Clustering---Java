@@ -273,7 +273,7 @@ public class Clusters {
     public double sumSSE() {
         FTimer ft = new FTimer("Sum Square");
         ArrayList<ArrayList<TextData>> cls = getCluster();
-        this.reCenter();
+        // this.reCenter();
         double sum = 0;
         for (int i = 0; i < this.centroids.size(); i++) {
             TextData td = this.centroids.get(i);
@@ -283,6 +283,7 @@ public class Clusters {
 
         }
         ft.time();
+        System.out.println("SSE: " + (int)sum);
         return sum;
     }
 
