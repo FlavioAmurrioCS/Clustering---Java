@@ -22,7 +22,7 @@ public class Miner {
         VectMap.setDistMethod(VectMap.EUCLEADIAN_SQUARE);
         Clusters.INITIAL_K = Clusters.K_RANDOM;
         Clusters.OTHERPOINT = Clusters.FAR_POINT_RANDOM;
-        Clusters.K_METHOD = Clusters.K_PLUS_PLUS;
+        Clusters.K_METHOD = Clusters.K_MEANS;
         Clusters model = new Clusters(INPUT_FILE);
 
         
