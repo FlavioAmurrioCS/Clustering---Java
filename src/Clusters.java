@@ -231,17 +231,42 @@ public class Clusters {
         }
     }
 
-    public void mine(double delta) {
+    public int mine(double delta) {
         FTimer ft = new FTimer("Mining");
         double change = Double.MAX_VALUE;
-        while (change > delta) {
+        int count = 0;
+        while (change > delta || count > 25) {
             this.classify();
             ArrayList<TextData> ori = new ArrayList<>(this.centroids);
             this.reCenter();
             change = getDistChange(ori, this.centroids);
+            count++;
         }
         this.classify();
         ft.time();
+        return (int)sumSSE();
+    }
+
+    public double SSE(TextData cent, ArrayList<TextData> tList){
+        double sum = 0;
+        for(TextData td : tList){
+            sum += td.euclideanSquare(cent);
+        }
+        return sum;
+    }
+
+    public double sumSSE(){
+        FTimer ft = new FTimer("Sum Square");
+        ArrayList<ArrayList<TextData>> cls = getCluster();
+        double sum = 0;
+        for(int i = 0; i < this.centroids.size(); i++)
+        {
+            TextData td = this.centroids.get(i);
+            ArrayList<TextData> tList = cls.get(i);
+            sum+= SSE(td, tList);
+        }
+        ft.time();
+        return sum;
     }
 
     public void toFile(String filename) {
