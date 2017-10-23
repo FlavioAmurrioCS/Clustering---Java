@@ -8,7 +8,7 @@ public class Miner {
     public static final String FEATURES_FILE = "./res/original/1507224963_474688_features.dat";
     public static final String INPUT_FILE = "./res/original/1507224963_4758732_input.dat";
     public static final String SCRATCH_FILE = "./res/gen/scratch.txt";
-    public static final String OUTPUT_FILE = "./res/gen/output.txt";
+    public static final String OUTPUT_FILE = "./res/gen/output";
     public static final String FEAT_FILE = "./res/gen/featfile.txt";
     public static final String MAP_FILE = "./res/gen/mapfile.txt";
     public static final String DISTCHANGE_FILE = "./res/gen/DisChange.txt";
@@ -20,11 +20,13 @@ public class Miner {
         TextData.TF_IDF = true;
         VectMap.setDistMethod(VectMap.MANHATTAN);
         Clusters.INITIAL_K = Clusters.K_SPECIAL;
+        Clusters.OTHERPOINT = Clusters.FAR_POINT_RANDOM;
         printInfo();
 
         Clusters model = new Clusters(INPUT_FILE);
         model.mine(1.5);
-        model.toFile(OUTPUT_FILE);
+        long time = System.currentTimeMillis();
+        model.toFile(OUTPUT_FILE + "-" + time + ".txt");
     }
 
     public static void printInfo() {
@@ -35,45 +37,6 @@ public class Miner {
         sb.append("\nInitial K: " + Clusters.INITIAL_K);
         System.out.println(sb.toString());
 
-    }
-
-    public static void reIndex() {
-        HashSet<Integer> sSet = new HashSet<>();
-        Scanner sc = FTools.fileOpener(INPUT_FILE);
-        while (sc.hasNextInt()) {
-            sSet.add(sc.nextInt());
-            sc.next();
-        }
-        sc.close();
-        ArrayList<Integer> sList = new ArrayList<>(sSet);
-        Collections.sort(sList);
-        FTools.listToFile(sList, FEAT_FILE);
-    }
-    public static void reindex2()
-    {
-        HashMap<String, Integer> fMap = FTools.fileToHashMap(FEAT_FILE);
-        ArrayList<String> output = new ArrayList<>();
-        Scanner sc = FTools.fileOpener(INPUT_FILE);
-        while(sc.hasNextLine())
-        {
-            String line = sc.nextLine();
-            String[] sp = line.split(" ");
-            for(int i = 0; i < sp.length; i+=2)
-            {
-                String n = fMap.get(sp[i]).toString();
-                sp[i] = n;
-            }
-            output.add(arrToString(sp));
-        }
-        FTools.listToFile(output, MAP_FILE);
-    }
-
-    public static String arrToString(String[] arr){
-        StringBuilder sb = new StringBuilder();
-        for(String str : arr){
-            sb.append(str + " ");
-        }
-        return sb.toString().trim();
     }
 }
 
@@ -108,3 +71,43 @@ class WordCount implements Comparable<WordCount> {
         return retList;
     }
 }
+
+
+// public static void reIndex() {
+//     HashSet<Integer> sSet = new HashSet<>();
+//     Scanner sc = FTools.fileOpener(INPUT_FILE);
+//     while (sc.hasNextInt()) {
+//         sSet.add(sc.nextInt());
+//         sc.next();
+//     }
+//     sc.close();
+//     ArrayList<Integer> sList = new ArrayList<>(sSet);
+//     Collections.sort(sList);
+//     FTools.listToFile(sList, FEAT_FILE);
+// }
+// public static void reindex2()
+// {
+//     HashMap<String, Integer> fMap = FTools.fileToHashMap(FEAT_FILE);
+//     ArrayList<String> output = new ArrayList<>();
+//     Scanner sc = FTools.fileOpener(INPUT_FILE);
+//     while(sc.hasNextLine())
+//     {
+//         String line = sc.nextLine();
+//         String[] sp = line.split(" ");
+//         for(int i = 0; i < sp.length; i+=2)
+//         {
+//             String n = fMap.get(sp[i]).toString();
+//             sp[i] = n;
+//         }
+//         output.add(arrToString(sp));
+//     }
+//     FTools.listToFile(output, MAP_FILE);
+// }
+
+// public static String arrToString(String[] arr){
+//     StringBuilder sb = new StringBuilder();
+//     for(String str : arr){
+//         sb.append(str + " ");
+//     }
+//     return sb.toString().trim();
+// }

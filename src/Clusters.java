@@ -19,6 +19,11 @@ public class Clusters {
     public static String K_METHOD = K_PLUS_PLUS;
     public static String INITIAL_K = K_SPECIAL;
 
+    public static final String FAR_POINT = "farPoint";
+    public static final String FAR_POINT_RANDOM = "farPointRandom";
+
+    public static String OTHERPOINT = FAR_POINT_RANDOM;
+
     private int kCount;
     private ArrayList<TextData> centroids;
     private ArrayList<TextData> dList;
@@ -61,7 +66,7 @@ public class Clusters {
         this.centroids.add(first);
         sList.remove(first);
         while (this.centroids.size() < kCount) {
-            TextData td = getFarPoint(sList);
+            TextData td = getOtherPoint(sList);
             this.centroids.add(td);
             sList.remove(td);
         }
@@ -92,14 +97,14 @@ public class Clusters {
     private TextData getCenter(ArrayList<TextData> sList) {
         TextData nCenter = new TextData();
         double size = sList.size();
-        for(TextData td : sList){
+        for (TextData td : sList) {
             nCenter = new TextData(nCenter.plus(td));
         }
         nCenter = new TextData(nCenter.divide(size));
         return nCenter;
     }
 
-    private TextData getNewCenter(ArrayList<TextData> sList){
+    private TextData getNewCenter(ArrayList<TextData> sList) {
         TextData ret = new TextData();
         HashSet<Integer> kSet = new HashSet<>();
         double size = sList.size();
@@ -130,17 +135,28 @@ public class Clusters {
         }
         return ret;
     }
+
     //264  - football
-    private TextData getKeyK(ArrayList<TextData> sList, Integer i){
+    private TextData getKeyK(ArrayList<TextData> sList, Integer i) {
         ArrayList<TextData> kList = new ArrayList<>();
-        for(TextData td : sList){
-            if(td.containsKey(i))
-            {
+        for (TextData td : sList) {
+            if (td.containsKey(i)) {
                 kList.add(td);
             }
         }
         System.out.println(i + " appeared on " + kList.size() + " documents.");
         return getCenter(kList);
+    }
+
+    public TextData getOtherPoint(ArrayList<TextData> sList) {
+        switch (OTHERPOINT) {
+        case FAR_POINT:
+            return getFarPoint(sList);
+        case FAR_POINT_RANDOM:
+            return getFarPointRandom(sList, 10);
+        default:
+            return getFarPointRandom(sList, 10);
+        }
     }
 
     private TextData getFarPoint(ArrayList<TextData> sList) {
@@ -157,6 +173,21 @@ public class Clusters {
             }
         }
         return ret;
+    }
+
+    private TextData getFarPointRandom(ArrayList<TextData> sList, int top) {
+        TextData ret = null;
+        ArrayList<Pair<TextData>> pList = new ArrayList<>();
+        for (TextData it : sList) {
+            double sumDist = 0;
+            for (TextData cent : this.centroids) {
+                sumDist += it.distance(cent);
+            }
+            pList.add(new Pair<TextData>(sumDist, it));
+        }
+        Collections.sort(pList);
+        int index = (new Random(System.currentTimeMillis())).nextInt(top);
+        return pList.get(index).obj;
     }
 
     private ArrayList<ArrayList<TextData>> getCluster() {
