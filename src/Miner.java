@@ -17,18 +17,20 @@ public class Miner {
         // reIndex();
         // reindex2();
 
-        while(true){
-            FTools.SHOW_LOG = false;
-            TextData.TF_IDF = true;
-            VectMap.setDistMethod(VectMap.MANHATTAN);
-            Clusters.INITIAL_K = Clusters.K_RANDOM;
-            Clusters.OTHERPOINT = Clusters.FAR_POINT_RANDOM;
-            printInfo();
-    
-            Clusters model = new Clusters(INPUT_FILE);
+        FTools.SHOW_LOG = false;
+        TextData.TF_IDF = true;
+        VectMap.setDistMethod(VectMap.MANHATTAN);
+        Clusters.INITIAL_K = Clusters.K_RANDOM;
+        Clusters.OTHERPOINT = Clusters.FAR_POINT_RANDOM;
+        printInfo();
+
+        Clusters model = new Clusters(INPUT_FILE);
+
+        while(true){            
             int sumSq = model.mine(1.5);
             long time = System.currentTimeMillis();
-            model.toFile(sumSq + "-" + OUTPUT_FILE + "-" + time + ".txt");
+            String filename = OUTPUT_FILE + "-" + sumSq + "-"+ time + ".txt";
+            model.toFile(filename);
         }        
     }
 
