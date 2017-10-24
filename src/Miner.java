@@ -30,7 +30,7 @@ public class Miner {
         while(true){
             printInfo();
             model.kMethod();                        
-            int sumSq = model.mine(0.2);
+            int sumSq = model.mine(0);
             long time = System.currentTimeMillis();
             String filename = OUTPUT_FILE + "-" + VectMap.distMethod + "-" + Clusters.K_METHOD + "-" + sumSq + "-"+ time + ".txt";
             model.toFile(filename);
