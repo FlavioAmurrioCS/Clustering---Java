@@ -157,9 +157,9 @@ public class Clusters {
         case FAR_POINT:
             return getFarPoint(sList);
         case FAR_POINT_RANDOM:
-            return getFarPointRandom(sList, 5);
+            return getFarPointRandom(sList, 10);
         default:
-            return getFarPointRandom(sList, 5);
+            return getFarPointRandom(sList, 10);
         }
     }
 
