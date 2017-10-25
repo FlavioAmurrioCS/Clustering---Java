@@ -243,7 +243,7 @@ public class VectMap<K extends Comparable<K>> extends HashMap<K, Double> {
         tSq = Math.sqrt(tSq);
         double vSq = (vect.square()).sum();
         vSq = Math.sqrt(vSq);
-        return (top / (tSq * vSq));
+        return -(top / (tSq * vSq));
     }
 
     public double jaccardIndex(VectMap<K> vect) {

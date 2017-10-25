@@ -240,7 +240,7 @@ public class Clusters {
         FTimer ft = new FTimer("Mining");
         double change = Double.MAX_VALUE;
         int count = 0;
-        while (change > delta || count > 25) {
+        while (change > delta && count < 25) {
             this.classify();
             ArrayList<TextData> ori = new ArrayList<>(this.centroids);
             this.reCenter();

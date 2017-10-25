@@ -16,6 +16,7 @@ public class Miner {
     public static void main(String[] args) {
         // reIndex();
         // reindex2();
+        // Trial.idtotxt();
 
         FTools.SHOW_LOG = false;
         TextData.TF_IDF = true;
@@ -30,7 +31,7 @@ public class Miner {
         while(true){
             printInfo();
             model.kMethod();                        
-            int sumSq = model.mine(0.2);
+            int sumSq = model.mine(.2);
             long time = System.currentTimeMillis();
             String filename = OUTPUT_FILE + "-" + VectMap.distMethod + "-" + Clusters.K_METHOD + "-" + sumSq + "-"+ time + ".txt";
             model.toFile(filename);
